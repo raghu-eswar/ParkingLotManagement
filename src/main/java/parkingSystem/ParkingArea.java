@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ParkingArea {
     public String name;
     public boolean status;
-    ParkingSpot [] parkingSpots;
+    public ParkingSpot [] parkingSpots;
 
     public ParkingArea(String name, int numberSpots) {
         this.name = name;

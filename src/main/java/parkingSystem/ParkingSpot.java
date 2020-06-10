@@ -18,4 +18,9 @@ public class ParkingSpot {
         this.startTime = System.currentTimeMillis();
         this.vehicle = vehicle;
     }
+
+    public void unPark(Vehicle vehicle) {
+        this.vehicle = null;
+        this.endTime = System.currentTimeMillis();
+    }
 }

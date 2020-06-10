@@ -1,6 +1,7 @@
 package parkingService;
 
 import parkingSystem.ParkingArea;
+import parkingSystem.ParkingSpot;
 import vehicales.Vehicle;
 
 import java.util.ArrayList;
@@ -22,5 +23,25 @@ public class Services {
         if (first.isEmpty())
             throw new RuntimeException("all parking areas are full");
        return first.get().park(vehicle);
+    }
+
+
+
+    public boolean unPark(Vehicle vehicle) {
+        ParkingSpot spot = getParkingSpot(vehicle);
+        if (spot == null)
+            throw new RuntimeException("No car found");
+        spot.unPark(vehicle);
+        return spot.vehicle == null;
+    }
+
+    private ParkingSpot getParkingSpot(Vehicle vehicle) {
+        for (ParkingArea parkingArea : parkingAreas) {
+            for (ParkingSpot parkingSpot : parkingArea.parkingSpots) {
+                if (parkingSpot.vehicle.equals(vehicle))
+                    return parkingSpot;
+            }
+        }
+        return null;
     }
 }
