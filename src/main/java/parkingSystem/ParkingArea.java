@@ -1,6 +1,8 @@
 package parkingSystem;
 
 import vehicales.Vehicle;
+
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -19,7 +21,7 @@ public class ParkingArea {
         AtomicInteger number = new AtomicInteger();
         ParkingSpot[] parkingSpots = new ParkingSpot[numberSpots];
         for (int i = 0; i < parkingSpots.length; i++) {
-            parkingSpots[i] = new ParkingSpot(number.incrementAndGet(), true);
+            parkingSpots[i] = new ParkingSpot(number.incrementAndGet(), true, this);
         }
         return parkingSpots;
     }
@@ -28,6 +30,7 @@ public class ParkingArea {
         ParkingSpot spot = getParkingSpot();
         if (spot != null) {
             spot.park(vehicle);
+            this.updateStatus();
             return spot.vehicle != null;
         }
         return false;
@@ -38,5 +41,9 @@ public class ParkingArea {
             if (spot.status) return spot;
         }
         return null;
+    }
+
+    void updateStatus() {
+        this.status = Arrays.stream(parkingSpots).anyMatch(parkingSpot -> parkingSpot.status);
     }
 }
