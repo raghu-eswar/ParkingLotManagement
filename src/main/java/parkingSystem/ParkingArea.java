@@ -1,12 +1,13 @@
 package parkingSystem;
 
-import vehicales.Vehicle;
+import vehicles.Vehicle;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class ParkingArea {
+
     public String name;
     public boolean status;
     public ParkingSpot [] parkingSpots;

@@ -2,7 +2,7 @@ package parkingSystem;
 
 import org.junit.Assert;
 import org.junit.Test;
-import vehicales.Car;
+import vehicles.Car;
 
 public class TestParkingArea {
 

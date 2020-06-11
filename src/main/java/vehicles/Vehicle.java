@@ -1,6 +1,7 @@
-package vehicales;
+package vehicles;
 
 public abstract class Vehicle {
+
     public String vehicleNumber;
     public String brand;
 
