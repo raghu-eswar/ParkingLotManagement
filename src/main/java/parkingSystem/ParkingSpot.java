@@ -1,6 +1,6 @@
 package parkingSystem;
 
-import vehicales.Vehicle;
+import vehicles.Vehicle;
 
 public class ParkingSpot {
     public int spotNumber;

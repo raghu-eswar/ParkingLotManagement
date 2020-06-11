@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import vehicales.Car;
+import vehicles.Car;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestParkingSpot {
@@ -15,7 +15,7 @@ public class TestParkingSpot {
 
     @Test
     public void givenVehicleReference_thenPark_shouldParkVehicle() {
-        ParkingSpot spot = new ParkingSpot(1,true, parkingArea);
+        ParkingSpot spot = new ParkingSpot(1,true,parkingArea);
         Car car = new Car("AP 1234", "honda");
         spot.park(car);
         Assert.assertEquals(spot.vehicle, car);

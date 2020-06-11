@@ -2,7 +2,7 @@ package parkingService;
 
 import parkingSystem.ParkingArea;
 import parkingSystem.ParkingSpot;
-import vehicales.Vehicle;
+import vehicles.Vehicle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
