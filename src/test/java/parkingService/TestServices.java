@@ -21,33 +21,33 @@ public class TestServices {
 
     @Test
     public void givenVehicleReference_thenPark_shouldReturnTrue() {
-        Vehicle car = Mockito.mock(Vehicle.class);
+        Vehicle vehicle = Mockito.mock(Vehicle.class);
         parkingArea.status = AVAILABLE;
         Services services = new Services(new Owner(parkingArea));
-        Mockito.when(parkingArea.park(car)).thenReturn(true);
-        Assert.assertTrue(services.park(car));
-        Mockito.verify(parkingArea).park(car);
+        Mockito.when(parkingArea.park(vehicle)).thenReturn(true);
+        Assert.assertTrue(services.park(vehicle));
+        Mockito.verify(parkingArea).park(vehicle);
     }
 
     @Test
     public void givenVehicleReference_thenUnPark_shouldUnParkVehicle() {
-        Vehicle car = Mockito.mock(Vehicle.class);
-        car.parkingArea = parkingArea;
+        Vehicle vehicle = Mockito.mock(Vehicle.class);
+        vehicle.parkingArea = parkingArea;
         Services services = new Services(new Owner(parkingArea));
-        Mockito.when(parkingArea.unPark(car)).thenReturn(true);
-        Assert.assertTrue(services.unPark(car));
-        Mockito.verify(parkingArea).unPark(car);
+        Mockito.when(parkingArea.unPark(vehicle)).thenReturn(true);
+        Assert.assertTrue(services.unPark(vehicle));
+        Mockito.verify(parkingArea).unPark(vehicle);
     }
 
     @Test
     public void givenVehicleReference_afterParking_getParkingSpotShouldReturnCorrectSpot() {
-        Vehicle car = Mockito.mock(Vehicle.class);
-        car.parkingArea = parkingArea;
+        Vehicle vehicle = Mockito.mock(Vehicle.class);
+        vehicle.parkingArea = parkingArea;
         ParkingSpot parkingSpot = Mockito.mock(ParkingSpot.class);
         parkingSpot.spotNumber = 1;
         Services services = new Services(new Owner(parkingArea));
-        Mockito.when(parkingArea.getParkingSpot(car)).thenReturn(parkingSpot);
-        Assert.assertEquals(services.getParkingSpot(car), 1);
-        Mockito.verify(parkingArea).getParkingSpot(car);
+        Mockito.when(parkingArea.getParkingSpot(vehicle)).thenReturn(parkingSpot);
+        Assert.assertEquals(services.getParkingSpot(vehicle), 1);
+        Mockito.verify(parkingArea).getParkingSpot(vehicle);
     }
 }
