@@ -16,21 +16,23 @@ public class ParkingSpot {
         this.parkingArea = parkingArea;
     }
 
-    public void park(Vehicle vehicle) {
+    public ParkingSpot park(Vehicle vehicle) {
         this.startTime = System.currentTimeMillis();
         this.vehicle = vehicle;
         this.updateStatus();
+        return this;
     }
 
-    public void unPark(Vehicle vehicle) {
+    public ParkingSpot unPark(Vehicle vehicle) {
         this.vehicle = null;
         this.endTime = System.currentTimeMillis();
         this.updateStatus();
-        parkingArea.updateStatus();
+        return this;
     }
 
     void updateStatus() {
         this.status = this.vehicle == null;
+        parkingArea.updateStatus();
     }
 
 }

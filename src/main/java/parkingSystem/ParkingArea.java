@@ -31,10 +31,17 @@ public class ParkingArea {
         ParkingSpot spot = getParkingSpot();
         if (spot != null) {
             spot.park(vehicle);
-            this.updateStatus();
             return spot.vehicle != null;
         }
         return false;
+    }
+
+    public boolean unPark(Vehicle vehicle) {
+        ParkingSpot spot = this.getParkingSpot(vehicle);
+        if (spot == null)
+            throw new RuntimeException("No car found");
+        spot.unPark(vehicle);
+        return spot.vehicle == null;
     }
 
     private ParkingSpot getParkingSpot() {
@@ -44,7 +51,16 @@ public class ParkingArea {
         return null;
     }
 
+    private ParkingSpot getParkingSpot(Vehicle vehicle) {
+        for (ParkingSpot parkingSpot : this.parkingSpots) {
+            if (parkingSpot.vehicle.equals(vehicle))
+                return parkingSpot;
+        }
+        return null;
+    }
+
     void updateStatus() {
         this.status = Arrays.stream(parkingSpots).anyMatch(parkingSpot -> parkingSpot.status);
     }
+
 }

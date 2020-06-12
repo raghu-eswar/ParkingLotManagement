@@ -1,12 +1,9 @@
 package vehicles;
 
-public abstract class Vehicle {
+import parkingSystem.ParkingArea;
 
-    public String vehicleNumber;
-    public String brand;
+public class Vehicle {
 
-    public Vehicle(String vehicleNumber, String brand) {
-        this.vehicleNumber = vehicleNumber;
-        this.brand = brand;
-    }
+    public ParkingArea parkingArea;
+
 }

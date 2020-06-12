@@ -1,7 +1,6 @@
 package parkingService;
 
 import parkingSystem.ParkingArea;
-import parkingSystem.ParkingSpot;
 import vehicles.Vehicle;
 
 import java.util.ArrayList;
@@ -19,29 +18,18 @@ public class Services {
     }
 
     public boolean park(Vehicle vehicle) {
+        if (vehicle.parkingArea != null)
+            throw new RuntimeException("Vehicle parked already");
         Optional<ParkingArea> first = this.parkingAreas.stream().filter(parkingArea -> parkingArea.status).findFirst();
         if (first.isEmpty())
             throw new RuntimeException("all parking areas are full");
        return first.get().park(vehicle);
     }
 
-
-
     public boolean unPark(Vehicle vehicle) {
-        ParkingSpot spot = getParkingSpot(vehicle);
-        if (spot == null)
+        if (vehicle.parkingArea == null)
             throw new RuntimeException("No car found");
-        spot.unPark(vehicle);
-        return spot.vehicle == null;
+        return vehicle.parkingArea.unPark(vehicle);
     }
 
-    private ParkingSpot getParkingSpot(Vehicle vehicle) {
-        for (ParkingArea parkingArea : parkingAreas) {
-            for (ParkingSpot parkingSpot : parkingArea.parkingSpots) {
-                if (parkingSpot.vehicle.equals(vehicle))
-                    return parkingSpot;
-            }
-        }
-        return null;
-    }
 }
