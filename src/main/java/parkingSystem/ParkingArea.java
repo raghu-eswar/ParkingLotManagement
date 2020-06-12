@@ -5,17 +5,21 @@ import vehicles.Vehicle;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static parkingSystem.Status.*;
+
 
 public class ParkingArea {
 
     public String name;
-    public boolean status;
+    public Status status;
     public ParkingSpot [] parkingSpots;
+    public Owner owner;
 
-    public ParkingArea(String name, int numberSpots) {
+    public ParkingArea(String name, int numberSpots, Owner owner) {
         this.name = name;
-        this.status = true;
+        this.status = AVAILABLE;
         this.parkingSpots = createParkingSpots(numberSpots);
+        this.owner = owner;
     }
 
     private ParkingSpot[] createParkingSpots(int numberSpots) {
@@ -46,7 +50,7 @@ public class ParkingArea {
 
     private ParkingSpot getParkingSpot() {
         for (ParkingSpot spot :this.parkingSpots) {
-            if (spot.status) return spot;
+            if (spot.status.equals(AVAILABLE)) return spot;
         }
         return null;
     }
@@ -60,7 +64,13 @@ public class ParkingArea {
     }
 
     void updateStatus() {
-        this.status = Arrays.stream(parkingSpots).anyMatch(parkingSpot -> parkingSpot.status);
+        if (this.status != (this.status = Arrays.stream(parkingSpots).anyMatch(parkingSpot -> parkingSpot.status.equals(AVAILABLE))? AVAILABLE : FILLED ))
+            owner.updateStatus(this, this.status);
     }
 
 }
+
+
+
+
+
