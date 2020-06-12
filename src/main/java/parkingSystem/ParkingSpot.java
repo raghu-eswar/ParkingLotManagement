@@ -12,7 +12,7 @@ public class ParkingSpot {
     public long endTime;
     public ParkingArea parkingArea;
 
-    public ParkingSpot(int spotNumber, boolean status, ParkingArea parkingArea) {
+    public ParkingSpot(int spotNumber, ParkingArea parkingArea) {
         this.spotNumber = spotNumber;
         this.status = AVAILABLE;
         this.parkingArea = parkingArea;
@@ -21,11 +21,13 @@ public class ParkingSpot {
     public ParkingSpot park(Vehicle vehicle) {
         this.startTime = System.currentTimeMillis();
         this.vehicle = vehicle;
+        this.vehicle.parkingArea = parkingArea;
         this.updateStatus();
         return this;
     }
 
-    public ParkingSpot unPark(Vehicle vehicle) {
+    public ParkingSpot unPark() {
+        this.vehicle.parkingArea = null;
         this.vehicle = null;
         this.endTime = System.currentTimeMillis();
         this.updateStatus();

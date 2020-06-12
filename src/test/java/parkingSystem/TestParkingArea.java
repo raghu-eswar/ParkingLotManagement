@@ -39,7 +39,7 @@ public class TestParkingArea {
         Vehicle vehicle = Mockito.mock(Vehicle.class);
         parkingArea.park(vehicle);
         Assert.assertEquals(parkingArea.parkingSpots[0].vehicle, vehicle);
-        parkingArea.parkingSpots[0].unPark(vehicle);
+        parkingArea.parkingSpots[0].unPark();
         Assert.assertEquals(parkingArea.status, AVAILABLE);
     }
 

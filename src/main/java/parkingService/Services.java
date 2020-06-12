@@ -3,6 +3,13 @@ package parkingService;
 import parkingSystem.Owner;
 import vehicles.Vehicle;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static parkingSystem.Status.FILLED;
+
 public class Services {
 
     Owner owner;
@@ -16,7 +23,14 @@ public class Services {
             throw new RuntimeException("Vehicle parked already");
         if (owner.parkingAreasAvailable.isEmpty())
             throw new RuntimeException("all parking areas are full");
-       return owner.parkingAreasAvailable.get(0).park(vehicle);
+        List<Long> vehiclesParked = owner.parkingAreasAvailable.stream()
+                                                        .map(parkingArea -> parkingArea.parkingSpots)
+                                                        .map(parkingSpots -> Arrays.stream(parkingSpots)
+                                                                                    .filter(parkingSpot -> parkingSpot.status.equals(FILLED))
+                                                                                    .count()/5).collect(Collectors.toList());
+        Optional<Long> minimumVehicles = vehiclesParked.stream().reduce(Math::min);
+        int indexOfParkingArea = minimumVehicles.map(vehiclesParked::indexOf).orElse(0);
+        return owner.parkingAreasAvailable.get(indexOfParkingArea).park(vehicle);
     }
 
     public boolean unPark(Vehicle vehicle) {

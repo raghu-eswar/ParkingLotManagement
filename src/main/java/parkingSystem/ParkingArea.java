@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static parkingSystem.Status.*;
 
-
 public class ParkingArea {
 
     public String name;
@@ -26,7 +25,7 @@ public class ParkingArea {
         AtomicInteger number = new AtomicInteger();
         ParkingSpot[] parkingSpots = new ParkingSpot[numberSpots];
         for (int i = 0; i < parkingSpots.length; i++) {
-            parkingSpots[i] = new ParkingSpot(number.incrementAndGet(), true, this);
+            parkingSpots[i] = new ParkingSpot(number.incrementAndGet(), this);
         }
         return parkingSpots;
     }
@@ -44,7 +43,7 @@ public class ParkingArea {
         ParkingSpot spot = this.getParkingSpot(vehicle);
         if (spot == null)
             throw new RuntimeException("No car found");
-        spot.unPark(vehicle);
+        spot.unPark();
         return spot.vehicle == null;
     }
 
