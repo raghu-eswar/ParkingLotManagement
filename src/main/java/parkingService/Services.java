@@ -25,4 +25,10 @@ public class Services {
         return vehicle.parkingArea.unPark(vehicle);
     }
 
+    public int getParkingSpot(Vehicle vehicle) {
+        if (vehicle.parkingArea == null)
+            throw new RuntimeException("No car found");
+        return vehicle.parkingArea.getParkingSpot(vehicle).spotNumber;
+    }
+
 }

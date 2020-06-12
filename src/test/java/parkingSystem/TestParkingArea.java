@@ -42,4 +42,12 @@ public class TestParkingArea {
         parkingArea.parkingSpots[0].unPark(car);
         Assert.assertEquals(parkingArea.status, AVAILABLE);
     }
+
+    @Test
+    public void givenVehicleReference_afterParking_getParkingSpotShouldReturnCorrectSpot() {
+        ParkingArea parkingArea = new ParkingArea("parking-1", 10, owner);
+        Vehicle car = Mockito.mock(Vehicle.class);
+        parkingArea.park(car);
+        Assert.assertEquals(parkingArea.parkingSpots[0], parkingArea.getParkingSpot(car));
+    }
 }

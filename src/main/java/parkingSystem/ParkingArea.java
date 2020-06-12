@@ -55,7 +55,7 @@ public class ParkingArea {
         return null;
     }
 
-    private ParkingSpot getParkingSpot(Vehicle vehicle) {
+    public ParkingSpot getParkingSpot(Vehicle vehicle) {
         for (ParkingSpot parkingSpot : this.parkingSpots) {
             if (parkingSpot.vehicle.equals(vehicle))
                 return parkingSpot;

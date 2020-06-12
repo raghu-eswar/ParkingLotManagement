@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import parkingSystem.Owner;
 import parkingSystem.ParkingArea;
+import parkingSystem.ParkingSpot;
 import vehicles.Vehicle;
 
 import static parkingSystem.Status.AVAILABLE;
@@ -36,5 +37,17 @@ public class TestServices {
         Mockito.when(parkingArea.unPark(car)).thenReturn(true);
         Assert.assertTrue(services.unPark(car));
         Mockito.verify(parkingArea).unPark(car);
+    }
+
+    @Test
+    public void givenVehicleReference_afterParking_getParkingSpotShouldReturnCorrectSpot() {
+        Vehicle car = Mockito.mock(Vehicle.class);
+        car.parkingArea = parkingArea;
+        ParkingSpot parkingSpot = Mockito.mock(ParkingSpot.class);
+        parkingSpot.spotNumber = 1;
+        Services services = new Services(new Owner(parkingArea));
+        Mockito.when(parkingArea.getParkingSpot(car)).thenReturn(parkingSpot);
+        Assert.assertEquals(services.getParkingSpot(car), 1);
+        Mockito.verify(parkingArea).getParkingSpot(car);
     }
 }
