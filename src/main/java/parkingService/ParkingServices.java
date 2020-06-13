@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 import static parkingService.ParkingType.NORMAL;
 import static parkingSystem.Status.FILLED;
 
-public class Services {
+public class ParkingServices {
 
     Owner owner;
 
-    public Services(Owner owner) {
+    public ParkingServices(Owner owner) {
         this.owner = owner;
     }
 
