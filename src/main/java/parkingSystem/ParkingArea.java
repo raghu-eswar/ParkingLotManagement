@@ -38,11 +38,8 @@ public class ParkingArea {
 
     public boolean park(Vehicle vehicle, ParkingType type) {
         ParkingSpot spot = getParkingSpot(type);
-        if (spot != null) {
-            spot.park(vehicle);
-            return spot.vehicle != null;
-        }
-        return false;
+        spot.park(vehicle);
+        return spot.vehicle != null;
     }
 
     public boolean unPark(Vehicle vehicle) {
