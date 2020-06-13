@@ -1,11 +1,17 @@
 package parkingSystem;
 
+import parkingService.ParkingType;
 import vehicles.Vehicle;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
-import static parkingSystem.Status.*;
+import static parkingService.ParkingType.HANDICAPPED;
+import static parkingSystem.Status.AVAILABLE;
+import static parkingSystem.Status.FILLED;
 
 public class ParkingArea {
 
@@ -30,8 +36,8 @@ public class ParkingArea {
         return parkingSpots;
     }
 
-    public boolean park(Vehicle vehicle) {
-        ParkingSpot spot = getParkingSpot();
+    public boolean park(Vehicle vehicle, ParkingType type) {
+        ParkingSpot spot = getParkingSpot(type);
         if (spot != null) {
             spot.park(vehicle);
             return spot.vehicle != null;
@@ -47,29 +53,25 @@ public class ParkingArea {
         return spot.vehicle == null;
     }
 
-    private ParkingSpot getParkingSpot() {
-        for (ParkingSpot spot :this.parkingSpots) {
-            if (spot.status.equals(AVAILABLE)) return spot;
-        }
-        return null;
+    private ParkingSpot getParkingSpot(ParkingType type) {
+        List<ParkingSpot> availableParkingSpotStream = Arrays.stream(this.parkingSpots)
+                                                                .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
+                                                                .collect(Collectors.toList());
+        if (type.equals(HANDICAPPED))
+            return availableParkingSpotStream.get(availableParkingSpotStream.size()-1);
+        return availableParkingSpotStream.get(0);
     }
 
     public ParkingSpot getParkingSpot(Vehicle vehicle) {
-        for (ParkingSpot parkingSpot : this.parkingSpots) {
-            if (parkingSpot.vehicle.equals(vehicle))
-                return parkingSpot;
-        }
-        return null;
+        Optional<ParkingSpot> parkingSpotStream = Arrays.stream(this.parkingSpots)
+                                                        .filter(parkingSpot -> parkingSpot.vehicle.equals(vehicle)).findFirst();
+        return parkingSpotStream.orElse(null);
     }
 
     void updateStatus() {
-        if (this.status != (this.status = Arrays.stream(parkingSpots).anyMatch(parkingSpot -> parkingSpot.status.equals(AVAILABLE))? AVAILABLE : FILLED ))
+        if (this.status != (this.status = Arrays.stream(parkingSpots)
+                                                .anyMatch(parkingSpot -> parkingSpot.status.equals(AVAILABLE))? AVAILABLE : FILLED ))
             owner.updateStatus(this, this.status);
     }
 
 }
-
-
-
-
-

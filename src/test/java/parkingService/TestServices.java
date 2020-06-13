@@ -12,6 +12,7 @@ import parkingSystem.ParkingArea;
 import parkingSystem.ParkingSpot;
 import vehicles.Vehicle;
 
+import static parkingService.ParkingType.NORMAL;
 import static parkingSystem.Status.AVAILABLE;
 import static parkingSystem.Status.FILLED;
 
@@ -27,9 +28,9 @@ public class TestServices {
         parkingArea.status = AVAILABLE;
         parkingArea.parkingSpots = new ParkingSpot[]{new ParkingSpot(1, parkingArea)};
         Services services = new Services(new Owner(parkingArea));
-        Mockito.when(parkingArea.park(vehicle)).thenReturn(true);
+        Mockito.when(parkingArea.park(vehicle, NORMAL)).thenReturn(true);
         Assert.assertTrue(services.park(vehicle));
-        Mockito.verify(parkingArea).park(vehicle);
+        Mockito.verify(parkingArea).park(vehicle, NORMAL);
     }
 
     @Test
@@ -66,19 +67,19 @@ public class TestServices {
         parkingArea1.parkingSpots = new ParkingSpot[]{new ParkingSpot(1, parkingArea)};
         Services services = new Services(new Owner(parkingArea, parkingArea1));
         final int[] counter = {1};
-        Mockito.when(parkingArea.park(vehicle)).then(invocation -> {
+        Mockito.when(parkingArea.park(vehicle, NORMAL)).then(invocation -> {
             parkingArea.parkingSpots[counter[0]++].status = FILLED;
             return true;
         });
-        Mockito.when(parkingArea1.park(vehicle)).thenReturn(true);
+        Mockito.when(parkingArea1.park(vehicle, NORMAL)).thenReturn(true);
         Assert.assertTrue(services.park(vehicle));
         Assert.assertTrue(services.park(vehicle));
         Assert.assertTrue(services.park(vehicle));
         Assert.assertTrue(services.park(vehicle));
         Assert.assertTrue(services.park(vehicle));
         Assert.assertTrue(services.park(vehicle));
-        Mockito.verify(parkingArea, new Times(5)).park(vehicle);
-        Mockito.verify(parkingArea1).park(vehicle);
+        Mockito.verify(parkingArea, new Times(5)).park(vehicle, NORMAL);
+        Mockito.verify(parkingArea1).park(vehicle, NORMAL);
     }
 
 }
