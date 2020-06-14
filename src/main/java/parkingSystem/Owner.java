@@ -6,9 +6,9 @@ import java.util.List;
 
 public class Owner {
 
-    public List<ParkingLot> parkingAreasAvailable = new ArrayList<>();
-    public List<ParkingLot> parkingAreasFilled = new ArrayList<>();
-    public List<ParkingLot> parkingAreasUnderMaintenance = new ArrayList<>();
+    public List<ParkingLot> parkingLotsAvailable = new ArrayList<>();
+    public List<ParkingLot> parkingLotsFilled = new ArrayList<>();
+    public List<ParkingLot> parkingLotsUnderMaintenance = new ArrayList<>();
 
     public Owner() {    }
 
@@ -17,19 +17,19 @@ public class Owner {
     }
 
     public void addParkingLots(ParkingLot parkingLot, ParkingLot... parkingLots) {
-        this.parkingAreasAvailable.add(parkingLot);
-        this.parkingAreasAvailable.addAll(Arrays.asList(parkingLots));
+        this.parkingLotsAvailable.add(parkingLot);
+        this.parkingLotsAvailable.addAll(Arrays.asList(parkingLots));
     }
 
     public void updateStatus(ParkingLot parkingLot, Status status) {
         switch (status) {
             case FILLED:
-                parkingAreasAvailable.remove(parkingLot);
-                parkingAreasFilled.add(parkingLot);
+                parkingLotsAvailable.remove(parkingLot);
+                parkingLotsFilled.add(parkingLot);
                 break;
             case AVAILABLE:
-                parkingAreasFilled.remove(parkingLot);
-                parkingAreasAvailable.add(parkingLot);
+                parkingLotsFilled.remove(parkingLot);
+                parkingLotsAvailable.add(parkingLot);
                 break;
         }
     }

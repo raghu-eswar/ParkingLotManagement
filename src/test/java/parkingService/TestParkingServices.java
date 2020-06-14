@@ -27,6 +27,7 @@ public class TestParkingServices {
     @Test
     public void givenVehicleReference_thenPark_shouldReturnTrue() {
         Vehicle vehicle = Mockito.mock(Vehicle.class);
+        vehicle.vehicleSize = SMALL;
         parkingLot.status = AVAILABLE;
         parkingLot.parkingSpots = new ParkingSpot[]{new ParkingSpot(1, parkingLot)};
         ParkingServices parkingServices = new ParkingServices(new Owner(parkingLot));
@@ -63,15 +64,16 @@ public class TestParkingServices {
     @Test
     public void givenVehicleReferences_park_shouldDistributeFiveVehiclesEvenlyToEachParkingArea() {
         Vehicle vehicle = Mockito.mock(Vehicle.class);
+        vehicle.vehicleSize = SMALL;
         parkingLot.status = AVAILABLE;
         parkingLot.parkingSpots = new ParkingSpot[]{new ParkingSpot(1, parkingLot), new ParkingSpot(2, parkingLot),
                                                      new ParkingSpot(3, parkingLot), new ParkingSpot(4, parkingLot),
                                                      new ParkingSpot(5, parkingLot),new ParkingSpot(6, parkingLot)};
         ParkingLot parkingLot1 = Mockito.mock(ParkingLot.class);
         parkingLot1.status = AVAILABLE;
-        parkingLot1.parkingSpots = new ParkingSpot[]{new ParkingSpot(1, parkingLot)};
+        parkingLot1.parkingSpots = new ParkingSpot[]{new ParkingSpot(1, parkingLot), new ParkingSpot(1, parkingLot)};
         ParkingServices parkingServices = new ParkingServices(new Owner(parkingLot, parkingLot1));
-        final int[] counter = {1};
+        final int[] counter = {0};
         Mockito.when(parkingLot.park(vehicle, NORMAL)).then(invocation -> {
             parkingLot.parkingSpots[counter[0]++].status = FILLED;
             return true;
@@ -108,6 +110,26 @@ public class TestParkingServices {
         Assert.assertEquals(vehicles[0].color, WHITE);
         Assert.assertEquals(vehicles[1].color, WHITE);
         Assert.assertEquals(vehicles[2].color, WHITE);
+    }
+
+    @Test
+    public void afterParkingGivenVehicles_getVehiclesByColor_shouldReturnArrayOfWhiteVehicles1() {
+        Vehicle vehicle1 = new Vehicle(SMALL, WHITE);
+        Vehicle vehicle2 = new Vehicle(LARGE, BLACK);
+        Vehicle vehicle3 = new Vehicle(LARGE, WHITE);
+        Vehicle vehicle4 = new Vehicle(SMALL, RED);
+        Vehicle vehicle5 = new Vehicle(LARGE, WHITE);
+        Vehicle vehicle6 = new Vehicle(MEDIUM, WHITE);
+        Owner owner = new Owner();
+        owner.addParkingLots(new ParkingLot("lot-1", 6, owner),
+                new ParkingLot("lot-1", 7, owner));
+        ParkingServices services = new ParkingServices(owner);
+        Assert.assertTrue(services.park(vehicle1));
+        Assert.assertTrue(services.park(vehicle2));
+        Assert.assertTrue(services.park(vehicle3));
+        Assert.assertTrue(services.park(vehicle4));
+        Assert.assertTrue(services.park(vehicle5));
+        Assert.assertTrue(services.park(vehicle6));
     }
 
 }

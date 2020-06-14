@@ -10,8 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static parkingService.ParkingType.NORMAL;
+import static parkingSystem.Status.AVAILABLE;
 import static parkingSystem.Status.FILLED;
 
 public class ParkingServices {
@@ -25,16 +27,23 @@ public class ParkingServices {
     public boolean park(Vehicle vehicle, ParkingType type) {
         if (vehicle.parkingLot != null)
             throw new RuntimeException("Vehicle parked already");
-        if (owner.parkingAreasAvailable.isEmpty())
+        if (owner.parkingLotsAvailable.isEmpty())
             throw new RuntimeException("all parking areas are full");
-        List<Long> vehiclesParked = owner.parkingAreasAvailable.stream()
-                                                                .map(parkingArea -> parkingArea.parkingSpots)
-                                                                .map(parkingSpots -> Arrays.stream(parkingSpots)
-                                                                        .filter(parkingSpot -> parkingSpot.status.equals(FILLED))
-                                                                        .count()/5).collect(Collectors.toList());
-        Optional<Long> minimumVehicles = vehiclesParked.stream().reduce(Math::min);
-        int indexOfParkingArea = minimumVehicles.map(vehiclesParked::indexOf).orElse(0);
-        return owner.parkingAreasAvailable.get(indexOfParkingArea).park(vehicle, type);
+        List<ParkingLot> possibleLotsForVehicle = owner.parkingLotsAvailable
+                                                        .stream()
+                                                        .filter(parkingLot -> Arrays.stream(parkingLot.parkingSpots)
+                                                                .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
+                                                                .count() >= vehicle.vehicleSize.size).collect(Collectors.toList());
+        if (possibleLotsForVehicle.isEmpty())
+            throw new RuntimeException("space not available for "+vehicle.vehicleSize+" vehicles");
+        List<Long> countOfVehiclesParked = possibleLotsForVehicle.stream()
+                                                                 .map(parkingLot -> parkingLot.parkingSpots)
+                                                                 .map(parkingSpots -> Arrays.stream(parkingSpots)
+                                                                                        .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
+                                                                                        .count()).collect(Collectors.toList());
+        Optional<Long> minimumVehicles = countOfVehiclesParked.stream().reduce(Math::max);
+        int indexOfParkingArea = minimumVehicles.map(countOfVehiclesParked::indexOf).orElse(0);
+        return possibleLotsForVehicle.get(indexOfParkingArea).park(vehicle, type);
     }
 
     public boolean park(Vehicle vehicle) {
@@ -54,19 +63,19 @@ public class ParkingServices {
     }
 
     public Vehicle[] getVehiclesByColor(Color color) {
-        List<ParkingLot> parkingLots = new ArrayList<>(this.owner.parkingAreasAvailable);
-        parkingLots.addAll(this.owner.parkingAreasFilled);
+        List<ParkingLot> parkingLots = new ArrayList<>(this.owner.parkingLotsAvailable);
+        parkingLots.addAll(this.owner.parkingLotsFilled);
         return parkingLots.stream()
-                                        .map(parkingLot -> Arrays.asList(parkingLot.parkingSpots))
-                                        .reduce(new ArrayList<>(), (parkingSpots, parkingSpots2) -> {
-                                            parkingSpots.addAll(parkingSpots2);
-                                            return parkingSpots;
-                                        }).stream()
-                                          .filter(parkingSpot -> parkingSpot.vehicle != null)
-                                          .filter(parkingSpot -> parkingSpot.vehicle.color.equals(color))
-                                          .map(parkingSpot -> parkingSpot.vehicle)
-                                          .distinct()
-                                          .toArray(Vehicle[]::new);
+                            .map(parkingLot -> Arrays.asList(parkingLot.parkingSpots))
+                            .reduce(new ArrayList<>(), (parkingSpots, parkingSpots2) -> {
+                                parkingSpots.addAll(parkingSpots2);
+                                return parkingSpots;
+                            }).stream()
+                              .filter(parkingSpot -> parkingSpot.vehicle != null)
+                              .filter(parkingSpot -> parkingSpot.vehicle.color.equals(color))
+                              .map(parkingSpot -> parkingSpot.vehicle)
+                              .distinct()
+                              .toArray(Vehicle[]::new);
     }
 
 }
