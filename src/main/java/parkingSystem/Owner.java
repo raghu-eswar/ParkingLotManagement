@@ -10,7 +10,13 @@ public class Owner {
     public List<ParkingLot> parkingAreasFilled = new ArrayList<>();
     public List<ParkingLot> parkingAreasUnderMaintenance = new ArrayList<>();
 
+    public Owner() {    }
+
     public Owner(ParkingLot parkingLot, ParkingLot... parkingLots) {
+        addParkingLots(parkingLot, parkingLots);
+    }
+
+    public void addParkingLots(ParkingLot parkingLot, ParkingLot... parkingLots) {
         this.parkingAreasAvailable.add(parkingLot);
         this.parkingAreasAvailable.addAll(Arrays.asList(parkingLots));
     }

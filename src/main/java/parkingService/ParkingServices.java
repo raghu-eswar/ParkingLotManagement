@@ -1,8 +1,11 @@
 package parkingService;
 
 import parkingSystem.Owner;
+import parkingSystem.ParkingLot;
 import vehicles.Vehicle;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +51,22 @@ public class ParkingServices {
         if (vehicle.parkingLot == null)
             throw new RuntimeException("No car found");
         return Arrays.stream(vehicle.parkingLot.getParkingSpot(vehicle)).map(parkingSpot -> parkingSpot.spotNumber).toArray(Integer[]::new);
+    }
+
+    public Vehicle[] getVehiclesByColor(Color color) {
+        List<ParkingLot> parkingLots = new ArrayList<>(this.owner.parkingAreasAvailable);
+        parkingLots.addAll(this.owner.parkingAreasFilled);
+        return parkingLots.stream()
+                                        .map(parkingLot -> Arrays.asList(parkingLot.parkingSpots))
+                                        .reduce(new ArrayList<>(), (parkingSpots, parkingSpots2) -> {
+                                            parkingSpots.addAll(parkingSpots2);
+                                            return parkingSpots;
+                                        }).stream()
+                                          .filter(parkingSpot -> parkingSpot.vehicle != null)
+                                          .filter(parkingSpot -> parkingSpot.vehicle.color.equals(color))
+                                          .map(parkingSpot -> parkingSpot.vehicle)
+                                          .distinct()
+                                          .toArray(Vehicle[]::new);
     }
 
 }

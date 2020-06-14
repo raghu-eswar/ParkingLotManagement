@@ -12,9 +12,11 @@ import parkingSystem.ParkingLot;
 import parkingSystem.ParkingSpot;
 import vehicles.Vehicle;
 
+import static java.awt.Color.*;
 import static parkingService.ParkingType.NORMAL;
 import static parkingSystem.Status.AVAILABLE;
 import static parkingSystem.Status.FILLED;
+import static vehicles.VehicleSize.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestParkingServices {
@@ -83,6 +85,29 @@ public class TestParkingServices {
         Assert.assertTrue(parkingServices.park(vehicle));
         Mockito.verify(parkingLot, new Times(5)).park(vehicle, NORMAL);
         Mockito.verify(parkingLot1).park(vehicle, NORMAL);
+    }
+
+    @Test
+    public void afterParkingGivenVehicles_getVehiclesByColor_shouldReturnArrayOfWhiteVehicles() {
+        Vehicle vehicle1 = new Vehicle(SMALL, WHITE);
+        Vehicle vehicle2 = new Vehicle(MEDIUM, BLACK);
+        Vehicle vehicle3 = new Vehicle(MEDIUM, WHITE);
+        Vehicle vehicle4 = new Vehicle(SMALL, RED);
+        Vehicle vehicle5 = new Vehicle(LARGE, WHITE);
+        Owner owner = new Owner();
+        owner.addParkingLots(new ParkingLot("lot-1", 5, owner),
+                                new ParkingLot("lot-1", 10, owner));
+        ParkingServices services = new ParkingServices(owner);
+        Assert.assertTrue(services.park(vehicle1));
+        Assert.assertTrue(services.park(vehicle2));
+        Assert.assertTrue(services.park(vehicle3));
+        Assert.assertTrue(services.park(vehicle4));
+        Assert.assertTrue(services.park(vehicle5));
+        Vehicle[] vehicles = services.getVehiclesByColor(WHITE);
+        Assert.assertEquals(vehicles.length, 3);
+        Assert.assertEquals(vehicles[0].color, WHITE);
+        Assert.assertEquals(vehicles[1].color, WHITE);
+        Assert.assertEquals(vehicles[2].color, WHITE);
     }
 
 }

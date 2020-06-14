@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="parkingService.TestParkingServices" tests="4" skipped="0" failures="0" errors="0" timestamp="2020-06-14T07:54:50" hostname="DESKTOP-6S78C1S" time="0.744">
+<testsuite name="parkingService.TestParkingServices" tests="5" skipped="0" failures="0" errors="0" timestamp="2020-06-14T12:36:27" hostname="DESKTOP-6S78C1S" time="0.856">
   <properties/>
-  <testcase name="givenVehicleReference_afterParking_getParkingSpotShouldReturnCorrectSpot" classname="parkingService.TestParkingServices" time="0.727"/>
-  <testcase name="givenVehicleReference_thenPark_shouldReturnTrue" classname="parkingService.TestParkingServices" time="0.007"/>
+  <testcase name="givenVehicleReference_afterParking_getParkingSpotShouldReturnCorrectSpot" classname="parkingService.TestParkingServices" time="0.797"/>
+  <testcase name="givenVehicleReference_thenPark_shouldReturnTrue" classname="parkingService.TestParkingServices" time="0.01"/>
   <testcase name="givenVehicleReferences_park_shouldDistributeFiveVehiclesEvenlyToEachParkingArea" classname="parkingService.TestParkingServices" time="0.004"/>
-  <testcase name="givenVehicleReference_thenUnPark_shouldUnParkVehicle" classname="parkingService.TestParkingServices" time="0.001"/>
+  <testcase name="afterParkingGivenVehicles_getVehiclesByColor_shouldReturnArrayOfWhiteVehicles" classname="parkingService.TestParkingServices" time="0.039"/>
+  <testcase name="givenVehicleReference_thenUnPark_shouldUnParkVehicle" classname="parkingService.TestParkingServices" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
