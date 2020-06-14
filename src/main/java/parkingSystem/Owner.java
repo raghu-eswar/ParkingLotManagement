@@ -6,24 +6,24 @@ import java.util.List;
 
 public class Owner {
 
-    public List<ParkingArea> parkingAreasAvailable = new ArrayList<>();
-    public List<ParkingArea> parkingAreasFilled = new ArrayList<>();
-    public List<ParkingArea> parkingAreasUnderMaintenance = new ArrayList<>();
+    public List<ParkingLot> parkingAreasAvailable = new ArrayList<>();
+    public List<ParkingLot> parkingAreasFilled = new ArrayList<>();
+    public List<ParkingLot> parkingAreasUnderMaintenance = new ArrayList<>();
 
-    public Owner(ParkingArea parkingArea, ParkingArea ... parkingAreas) {
-        this.parkingAreasAvailable.add(parkingArea);
-        this.parkingAreasAvailable.addAll(Arrays.asList(parkingAreas));
+    public Owner(ParkingLot parkingLot, ParkingLot... parkingLots) {
+        this.parkingAreasAvailable.add(parkingLot);
+        this.parkingAreasAvailable.addAll(Arrays.asList(parkingLots));
     }
 
-    public void updateStatus(ParkingArea parkingArea, Status status) {
+    public void updateStatus(ParkingLot parkingLot, Status status) {
         switch (status) {
             case FILLED:
-                parkingAreasAvailable.remove(parkingArea);
-                parkingAreasFilled.add(parkingArea);
+                parkingAreasAvailable.remove(parkingLot);
+                parkingAreasFilled.add(parkingLot);
                 break;
             case AVAILABLE:
-                parkingAreasFilled.remove(parkingArea);
-                parkingAreasAvailable.add(parkingArea);
+                parkingAreasFilled.remove(parkingLot);
+                parkingAreasAvailable.add(parkingLot);
                 break;
         }
     }

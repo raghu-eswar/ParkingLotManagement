@@ -1,9 +1,9 @@
 package vehicles;
 
-import parkingSystem.ParkingArea;
+import parkingSystem.ParkingLot;
 
 public class Vehicle {
 
-    public ParkingArea parkingArea;
+    public ParkingLot parkingLot;
 
 }

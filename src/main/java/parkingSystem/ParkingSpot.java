@@ -10,24 +10,24 @@ public class ParkingSpot {
     public Vehicle vehicle;
     public long startTime;
     public long endTime;
-    public ParkingArea parkingArea;
+    public ParkingLot parkingLot;
 
-    public ParkingSpot(int spotNumber, ParkingArea parkingArea) {
+    public ParkingSpot(int spotNumber, ParkingLot parkingLot) {
         this.spotNumber = spotNumber;
         this.status = AVAILABLE;
-        this.parkingArea = parkingArea;
+        this.parkingLot = parkingLot;
     }
 
     public ParkingSpot park(Vehicle vehicle) {
         this.startTime = System.currentTimeMillis();
         this.vehicle = vehicle;
-        this.vehicle.parkingArea = parkingArea;
+        this.vehicle.parkingLot = parkingLot;
         this.updateStatus();
         return this;
     }
 
     public ParkingSpot unPark() {
-        this.vehicle.parkingArea = null;
+        this.vehicle.parkingLot = null;
         this.vehicle = null;
         this.endTime = System.currentTimeMillis();
         this.updateStatus();
@@ -36,7 +36,7 @@ public class ParkingSpot {
 
     void updateStatus() {
         this.status = (this.vehicle == null)? AVAILABLE : FILLED;
-        parkingArea.updateStatus();
+        parkingLot.updateStatus();
     }
 
 }

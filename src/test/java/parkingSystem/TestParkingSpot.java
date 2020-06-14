@@ -12,11 +12,11 @@ import vehicles.Vehicle;
 public class TestParkingSpot {
 
     @Mock
-    ParkingArea parkingArea;
+    ParkingLot parkingLot;
 
     @Test
     public void givenVehicleReference_thenPark_shouldParkVehicle() {
-        ParkingSpot spot = new ParkingSpot(1,parkingArea);
+        ParkingSpot spot = new ParkingSpot(1, parkingLot);
         Vehicle vehicle = Mockito.mock(Vehicle.class);
         spot.park(vehicle);
         Assert.assertEquals(spot.vehicle, vehicle);
@@ -24,7 +24,7 @@ public class TestParkingSpot {
 
     @Test
     public void givenVehicleReference_thenUnPark_shouldUnParkVehicle() {
-        ParkingSpot spot = new ParkingSpot(1, parkingArea);
+        ParkingSpot spot = new ParkingSpot(1, parkingLot);
         Vehicle vehicle = Mockito.mock(Vehicle.class);
         spot.park(vehicle);
         spot.unPark();

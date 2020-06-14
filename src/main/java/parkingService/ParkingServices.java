@@ -20,7 +20,7 @@ public class ParkingServices {
     }
 
     public boolean park(Vehicle vehicle, ParkingType type) {
-        if (vehicle.parkingArea != null)
+        if (vehicle.parkingLot != null)
             throw new RuntimeException("Vehicle parked already");
         if (owner.parkingAreasAvailable.isEmpty())
             throw new RuntimeException("all parking areas are full");
@@ -39,15 +39,15 @@ public class ParkingServices {
     }
 
     public boolean unPark(Vehicle vehicle) {
-        if (vehicle.parkingArea == null)
+        if (vehicle.parkingLot == null)
             throw new RuntimeException("No car found");
-        return vehicle.parkingArea.unPark(vehicle);
+        return vehicle.parkingLot.unPark(vehicle);
     }
 
     public int getParkingSpot(Vehicle vehicle) {
-        if (vehicle.parkingArea == null)
+        if (vehicle.parkingLot == null)
             throw new RuntimeException("No car found");
-        return vehicle.parkingArea.getParkingSpot(vehicle).spotNumber;
+        return vehicle.parkingLot.getParkingSpot(vehicle).spotNumber;
     }
 
 }

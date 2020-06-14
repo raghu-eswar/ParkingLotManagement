@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="parkingService.TestParkingServices" tests="4" skipped="0" failures="0" errors="0" timestamp="2020-06-14T04:32:37" hostname="DESKTOP-6S78C1S" time="1.233">
+  <properties/>
+  <testcase name="givenVehicleReference_afterParking_getParkingSpotShouldReturnCorrectSpot" classname="parkingService.TestParkingServices" time="1.198"/>
+  <testcase name="givenVehicleReference_thenPark_shouldReturnTrue" classname="parkingService.TestParkingServices" time="0.021"/>
+  <testcase name="givenVehicleReferences_park_shouldDistributeFiveVehiclesEvenlyToEachParkingArea" classname="parkingService.TestParkingServices" time="0.007"/>
+  <testcase name="givenVehicleReference_thenUnPark_shouldUnParkVehicle" classname="parkingService.TestParkingServices" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
