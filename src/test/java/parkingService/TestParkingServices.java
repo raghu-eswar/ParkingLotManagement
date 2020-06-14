@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.Times;
 import org.mockito.junit.MockitoJUnitRunner;
+import parkingSystem.Attendant;
 import parkingSystem.Owner;
 import parkingSystem.ParkingLot;
 import parkingSystem.ParkingSpot;
@@ -97,8 +98,9 @@ public class TestParkingServices {
         Vehicle vehicle4 = new Vehicle(SMALL, RED);
         Vehicle vehicle5 = new Vehicle(LARGE, WHITE);
         Owner owner = new Owner();
-        owner.addParkingLots(new ParkingLot("lot-1", 5, owner),
-                                new ParkingLot("lot-1", 10, owner));
+        Attendant attendant = new Attendant("123A", "Agarwal");
+        owner.addParkingLots(new ParkingLot("lot-1", 5, owner, attendant),
+                                new ParkingLot("lot-1", 10, owner, attendant));
         ParkingServices services = new ParkingServices(owner);
         Assert.assertTrue(services.park(vehicle1));
         Assert.assertTrue(services.park(vehicle2));
@@ -121,8 +123,9 @@ public class TestParkingServices {
         Vehicle vehicle5 = new Vehicle(LARGE, WHITE);
         Vehicle vehicle6 = new Vehicle(MEDIUM, WHITE);
         Owner owner = new Owner();
-        owner.addParkingLots(new ParkingLot("lot-1", 6, owner),
-                new ParkingLot("lot-1", 7, owner));
+        Attendant attendant = new Attendant("123A", "Agarwal");
+        owner.addParkingLots(new ParkingLot("lot-1", 6, owner, attendant),
+                                 new ParkingLot("lot-1", 7, owner, attendant));
         ParkingServices services = new ParkingServices(owner);
         Assert.assertTrue(services.park(vehicle1));
         Assert.assertTrue(services.park(vehicle2));

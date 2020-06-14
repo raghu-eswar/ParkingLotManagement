@@ -18,13 +18,15 @@ public class ParkingLot {
     public String name;
     public Status status;
     public ParkingSpot [] parkingSpots;
+    public Attendant parkingAttendant;
     public Owner owner;
 
-    public ParkingLot(String name, int numberSpots, Owner owner) {
+    public ParkingLot(String name, int numberSpots, Owner owner, Attendant parkingAttendant) {
         this.name = name;
         this.status = AVAILABLE;
         this.parkingSpots = createParkingSpots(numberSpots);
         this.owner = owner;
+        this.parkingAttendant = parkingAttendant;
     }
 
     private ParkingSpot[] createParkingSpots(int numberSpots) {

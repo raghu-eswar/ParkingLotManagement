@@ -1,6 +1,7 @@
 package parkingSystem;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,12 +19,18 @@ import static vehicles.VehicleSize.SMALL;
 @RunWith(MockitoJUnitRunner.class)
 public class TestParkingLot {
 
+    Attendant attendant;
     @Mock
     Owner owner;
 
+    @Before
+    public void setUp() {
+        attendant = new Attendant("123A", "Agarwal");
+    }
+
     @Test
     public void givenVehicleReference_thenPark_shouldParkVehicleAtFirstPlace() {
-        ParkingLot parkingLot = new ParkingLot("parking-1", 10, owner);
+        ParkingLot parkingLot = new ParkingLot("parking-1", 10, owner, attendant);
         Vehicle vehicle = Mockito.mock(Vehicle.class);
         vehicle.vehicleSize = SMALL;
         parkingLot.park(vehicle, NORMAL);
@@ -32,7 +39,7 @@ public class TestParkingLot {
 
     @Test
     public void givenVehicleReference_afterParking_parkingAreaStatusShouldBeUpdated() {
-        ParkingLot parkingLot = new ParkingLot("parking-1", 1, owner);
+        ParkingLot parkingLot = new ParkingLot("parking-1", 1, owner, attendant);
         Vehicle vehicle = Mockito.mock(Vehicle.class);
         vehicle.vehicleSize = SMALL;
         parkingLot.park(vehicle, NORMAL);
@@ -42,7 +49,7 @@ public class TestParkingLot {
 
     @Test
     public void givenVehicleReference_afterUnParking_parkingAreaStatusShouldBeUpdated() {
-        ParkingLot parkingLot = new ParkingLot("parking-1", 1, owner);
+        ParkingLot parkingLot = new ParkingLot("parking-1", 1, owner, attendant);
         Vehicle vehicle = Mockito.mock(Vehicle.class);
         vehicle.vehicleSize = SMALL;
         parkingLot.park(vehicle, NORMAL);
@@ -53,7 +60,7 @@ public class TestParkingLot {
 
     @Test
     public void givenVehicleReferenceAfterParking_getParkingSpot_ShouldReturnCorrectSpot() {
-        ParkingLot parkingLot = new ParkingLot("parking-1", 10, owner);
+        ParkingLot parkingLot = new ParkingLot("parking-1", 10, owner, attendant);
         Vehicle vehicle = Mockito.mock(Vehicle.class);
         vehicle.vehicleSize = SMALL;
         parkingLot.park(vehicle, NORMAL);
@@ -62,7 +69,7 @@ public class TestParkingLot {
 
     @Test
     public void givenVehicleReferenceAndParkingType_thenPark_shouldParkVehicleAtLastPlace() {
-        ParkingLot parkingLot = new ParkingLot("parking-1", 10, owner);
+        ParkingLot parkingLot = new ParkingLot("parking-1", 10, owner, attendant);
         Vehicle vehicle = Mockito.mock(Vehicle.class);
         vehicle.vehicleSize = SMALL;
         parkingLot.park(vehicle, HANDICAPPED);
@@ -71,7 +78,7 @@ public class TestParkingLot {
 
     @Test
     public void givenVehicleReference_thenPark_shouldParkVehicleAtFirstTwoPlace() {
-        ParkingLot parkingLot = new ParkingLot("parking-1", 10, owner);
+        ParkingLot parkingLot = new ParkingLot("parking-1", 10, owner, attendant);
         Vehicle vehicle = Mockito.mock(Vehicle.class);
         vehicle.vehicleSize = MEDIUM;
         parkingLot.park(vehicle, NORMAL);
