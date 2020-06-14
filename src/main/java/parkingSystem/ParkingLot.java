@@ -2,10 +2,10 @@ package parkingSystem;
 
 import parkingService.ParkingType;
 import vehicles.Vehicle;
+import vehicles.VehicleSize;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -37,32 +37,33 @@ public class ParkingLot {
     }
 
     public boolean park(Vehicle vehicle, ParkingType type) {
-        ParkingSpot spot = getParkingSpot(type);
-        spot.park(vehicle);
-        return spot.vehicle != null;
+        ParkingSpot[] spots = getParkingSpot(type, vehicle.vehicleSize);
+        Arrays.stream(spots).forEach(parkingSpot -> parkingSpot.park(vehicle));
+        return Arrays.stream(spots).allMatch(parkingSpot -> parkingSpot.vehicle.equals(vehicle));
     }
 
     public boolean unPark(Vehicle vehicle) {
-        ParkingSpot spot = this.getParkingSpot(vehicle);
-        if (spot == null)
+        ParkingSpot[] spots = this.getParkingSpot(vehicle);
+        if (spots == null)
             throw new RuntimeException("No car found");
-        spot.unPark();
-        return spot.vehicle == null;
+        Arrays.stream(spots).forEach(ParkingSpot::unPark);
+        return Arrays.stream(spots).allMatch(parkingSpot -> parkingSpot.vehicle == null);
     }
 
-    private ParkingSpot getParkingSpot(ParkingType type) {
-        List<ParkingSpot> availableParkingSpotStream = Arrays.stream(this.parkingSpots)
+    private ParkingSpot[] getParkingSpot(ParkingType type, VehicleSize vehicleSize) {
+        List<ParkingSpot> availableParkingSpots = Arrays.stream(this.parkingSpots)
                                                                 .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
                                                                 .collect(Collectors.toList());
         if (type.equals(HANDICAPPED))
-            return availableParkingSpotStream.get(availableParkingSpotStream.size()-1);
-        return availableParkingSpotStream.get(0);
+            return availableParkingSpots.subList(availableParkingSpots.size()-vehicleSize.size, availableParkingSpots.size())
+                                        .toArray(ParkingSpot[]::new);
+        return availableParkingSpots.subList(0, vehicleSize.size).toArray(ParkingSpot[]::new);
     }
 
-    public ParkingSpot getParkingSpot(Vehicle vehicle) {
-        Optional<ParkingSpot> parkingSpotStream = Arrays.stream(this.parkingSpots)
-                                                        .filter(parkingSpot -> parkingSpot.vehicle.equals(vehicle)).findFirst();
-        return parkingSpotStream.orElse(null);
+    public ParkingSpot[] getParkingSpot(Vehicle vehicle) {
+        return Arrays.stream(this.parkingSpots)
+                        .filter(parkingSpot -> vehicle.equals(parkingSpot.vehicle))
+                        .toArray(ParkingSpot[]::new);
     }
 
     void updateStatus() {

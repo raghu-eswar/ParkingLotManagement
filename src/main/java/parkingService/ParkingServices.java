@@ -44,10 +44,10 @@ public class ParkingServices {
         return vehicle.parkingLot.unPark(vehicle);
     }
 
-    public int getParkingSpot(Vehicle vehicle) {
+    public Integer[] getParkingSpot(Vehicle vehicle) {
         if (vehicle.parkingLot == null)
             throw new RuntimeException("No car found");
-        return vehicle.parkingLot.getParkingSpot(vehicle).spotNumber;
+        return Arrays.stream(vehicle.parkingLot.getParkingSpot(vehicle)).map(parkingSpot -> parkingSpot.spotNumber).toArray(Integer[]::new);
     }
 
 }

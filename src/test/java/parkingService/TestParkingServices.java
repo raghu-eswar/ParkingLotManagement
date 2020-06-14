@@ -50,8 +50,11 @@ public class TestParkingServices {
         ParkingSpot parkingSpot = Mockito.mock(ParkingSpot.class);
         parkingSpot.spotNumber = 1;
         ParkingServices parkingServices = new ParkingServices(new Owner(parkingLot));
-        Mockito.when(parkingLot.getParkingSpot(vehicle)).thenReturn(parkingSpot);
-        Assert.assertEquals(parkingServices.getParkingSpot(vehicle), 1);
+        Mockito.when(parkingLot.getParkingSpot(vehicle)).thenReturn(new ParkingSpot[]{parkingSpot});
+        Integer[] parkingSpots = parkingServices.getParkingSpot(vehicle);
+        Assert.assertEquals(parkingSpots.length, 1);
+        int spotNumber = parkingSpots[0];
+        Assert.assertEquals(1, spotNumber);
         Mockito.verify(parkingLot).getParkingSpot(vehicle);
     }
 
