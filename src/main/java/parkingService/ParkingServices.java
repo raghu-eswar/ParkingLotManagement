@@ -1,5 +1,6 @@
 package parkingService;
 
+import parkingSystem.JourneyDetails;
 import parkingSystem.Owner;
 import parkingSystem.ParkingLot;
 import vehicles.Vehicle;
@@ -60,20 +61,16 @@ public class ParkingServices {
         return Arrays.stream(vehicle.parkingLot.getParkingSpot(vehicle)).map(parkingSpot -> parkingSpot.spotNumber).toArray(Integer[]::new);
     }
 
-    public Vehicle[] getVehiclesByColor(Color color) {
+    public JourneyDetails[] getVehiclesByColor(Color color) {
         List<ParkingLot> parkingLots = new ArrayList<>(this.owner.parkingLotsAvailable);
         parkingLots.addAll(this.owner.parkingLotsFilled);
         return parkingLots.stream()
-                            .map(parkingLot -> Arrays.asList(parkingLot.parkingSpots))
-                            .reduce(new ArrayList<>(), (parkingSpots, parkingSpots2) -> {
-                                parkingSpots.addAll(parkingSpots2);
-                                return parkingSpots;
+                            .map(parkingLot -> parkingLot.logBook).reduce(new ArrayList<>(), (journeyDetails, journeyDetails2) -> {
+                                journeyDetails.addAll(journeyDetails2);
+                                return journeyDetails;
                             }).stream()
-                              .filter(parkingSpot -> parkingSpot.vehicle != null)
-                              .filter(parkingSpot -> parkingSpot.vehicle.color.equals(color))
-                              .map(parkingSpot -> parkingSpot.vehicle)
-                              .distinct()
-                              .toArray(Vehicle[]::new);
+                              .filter(journeyDetails -> journeyDetails.vehicle.color.equals(color))
+                              .toArray(JourneyDetails[]::new);
     }
 
 }

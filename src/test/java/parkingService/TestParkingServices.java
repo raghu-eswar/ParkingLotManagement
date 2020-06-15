@@ -7,10 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.Times;
 import org.mockito.junit.MockitoJUnitRunner;
-import parkingSystem.Attendant;
-import parkingSystem.Owner;
-import parkingSystem.ParkingLot;
-import parkingSystem.ParkingSpot;
+import parkingSystem.*;
 import vehicles.Vehicle;
 
 import static java.awt.Color.*;
@@ -92,11 +89,11 @@ public class TestParkingServices {
 
     @Test
     public void afterParkingGivenVehicles_getVehiclesByColor_shouldReturnArrayOfWhiteVehicles() {
-        Vehicle vehicle1 = new Vehicle(SMALL, WHITE);
-        Vehicle vehicle2 = new Vehicle(MEDIUM, BLACK);
-        Vehicle vehicle3 = new Vehicle(MEDIUM, WHITE);
-        Vehicle vehicle4 = new Vehicle(SMALL, RED);
-        Vehicle vehicle5 = new Vehicle(LARGE, WHITE);
+        Vehicle vehicle1 = new Vehicle(SMALL, WHITE, "lamborghini");
+        Vehicle vehicle2 = new Vehicle(MEDIUM, BLACK, "audi");
+        Vehicle vehicle3 = new Vehicle(MEDIUM, WHITE, "lamborghini");
+        Vehicle vehicle4 = new Vehicle(SMALL, RED, "audi");
+        Vehicle vehicle5 = new Vehicle(LARGE, WHITE, "lamborghini");
         Owner owner = new Owner();
         Attendant attendant = new Attendant("123A", "Agarwal");
         owner.addParkingLots(new ParkingLot("lot-1", 5, owner, attendant),
@@ -107,21 +104,21 @@ public class TestParkingServices {
         Assert.assertTrue(services.park(vehicle3));
         Assert.assertTrue(services.park(vehicle4));
         Assert.assertTrue(services.park(vehicle5));
-        Vehicle[] vehicles = services.getVehiclesByColor(WHITE);
-        Assert.assertEquals(vehicles.length, 3);
-        Assert.assertEquals(vehicles[0].color, WHITE);
-        Assert.assertEquals(vehicles[1].color, WHITE);
-        Assert.assertEquals(vehicles[2].color, WHITE);
+        JourneyDetails[] journeyDetails = services.getVehiclesByColor(WHITE);
+        Assert.assertEquals(journeyDetails.length, 3);
+        Assert.assertEquals(journeyDetails[0].vehicle.color, WHITE);
+        Assert.assertEquals(journeyDetails[1].vehicle.color, WHITE);
+        Assert.assertEquals(journeyDetails[2].vehicle.color, WHITE);
     }
 
     @Test
     public void afterParkingGivenVehicles_getVehiclesByColor_shouldReturnArrayOfWhiteVehicles1() {
-        Vehicle vehicle1 = new Vehicle(SMALL, WHITE);
-        Vehicle vehicle2 = new Vehicle(LARGE, BLACK);
-        Vehicle vehicle3 = new Vehicle(LARGE, WHITE);
-        Vehicle vehicle4 = new Vehicle(SMALL, RED);
-        Vehicle vehicle5 = new Vehicle(LARGE, WHITE);
-        Vehicle vehicle6 = new Vehicle(MEDIUM, WHITE);
+        Vehicle vehicle1 = new Vehicle(SMALL, WHITE, "lamborghini");
+        Vehicle vehicle2 = new Vehicle(LARGE, BLACK, "lamborghini");
+        Vehicle vehicle3 = new Vehicle(LARGE, WHITE, "lamborghini");
+        Vehicle vehicle4 = new Vehicle(SMALL, RED, "lamborghini");
+        Vehicle vehicle5 = new Vehicle(LARGE, WHITE, "lamborghini");
+        Vehicle vehicle6 = new Vehicle(MEDIUM, WHITE, "lamborghini");
         Owner owner = new Owner();
         Attendant attendant = new Attendant("123A", "Agarwal");
         owner.addParkingLots(new ParkingLot("lot-1", 6, owner, attendant),

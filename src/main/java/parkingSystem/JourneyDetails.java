@@ -10,12 +10,12 @@ public class JourneyDetails {
     public static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     public static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    String parkedDate;
-    String parkedTime;
-    String unParkedDate;
-    String unParkedTime;
-    Vehicle vehicle;
-    Attendant attendant;
+    public String parkedDate;
+    public String parkedTime;
+    public String unParkedDate;
+    public String unParkedTime;
+    public Vehicle vehicle;
+    public Attendant attendant;
 
     public JourneyDetails(LocalDateTime dateTime, Vehicle vehicle, Attendant attendant) {
         this.parkedDate = dateFormatter.format(dateTime);
