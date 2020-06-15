@@ -5,6 +5,7 @@ import vehicles.Vehicle;
 import vehicles.VehicleSize;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ public class ParkingLot {
         this.parkingSpots = createParkingSpots(numberSpots);
         this.owner = owner;
         this.parkingAttendant = parkingAttendant;
+        this.logBook = new LinkedList<>();
     }
 
     private ParkingSpot[] createParkingSpots(int numberSpots) {
@@ -42,6 +44,7 @@ public class ParkingLot {
     public boolean park(Vehicle vehicle, ParkingType type) {
         ParkingSpot[] spots = getParkingSpot(type, vehicle.vehicleSize);
         Arrays.stream(spots).forEach(parkingSpot -> parkingSpot.park(vehicle));
+        this.parkingAttendant.upDateLogBook(this.logBook, vehicle);
         return Arrays.stream(spots).allMatch(parkingSpot -> parkingSpot.vehicle.equals(vehicle));
     }
 
@@ -50,13 +53,14 @@ public class ParkingLot {
         if (spots == null)
             throw new RuntimeException("No car found");
         Arrays.stream(spots).forEach(ParkingSpot::unPark);
+        this.parkingAttendant.upDateLogBook(this.logBook, vehicle);
         return Arrays.stream(spots).allMatch(parkingSpot -> parkingSpot.vehicle == null);
     }
 
     private ParkingSpot[] getParkingSpot(ParkingType type, VehicleSize vehicleSize) {
         List<ParkingSpot> availableParkingSpots = Arrays.stream(this.parkingSpots)
-                                                                .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
-                                                                .collect(Collectors.toList());
+                                                        .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
+                                                        .collect(Collectors.toList());
         if (type.equals(HANDICAPPED))
             return availableParkingSpots.subList(availableParkingSpots.size()-vehicleSize.size, availableParkingSpots.size())
                                         .toArray(ParkingSpot[]::new);

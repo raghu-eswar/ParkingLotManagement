@@ -86,4 +86,30 @@ public class TestParkingLot {
         Assert.assertEquals(parkingLot.parkingSpots[1].vehicle, vehicle);
     }
 
+    @Test
+    public void givenVehicleReference_afterParking_logBookShouldBeUpdated() {
+        ParkingLot parkingLot = new ParkingLot("parking-1", 1, owner, attendant);
+        Vehicle vehicle = Mockito.mock(Vehicle.class);
+        vehicle.vehicleSize = SMALL;
+        parkingLot.park(vehicle, NORMAL);
+        Assert.assertEquals(parkingLot.parkingSpots[0].vehicle, vehicle);
+        Assert.assertEquals(parkingLot.status, FILLED);
+        Assert.assertEquals(parkingLot.logBook.size(), 1);
+        Assert.assertEquals(parkingLot.logBook.get(0).vehicle, vehicle);
+    }
+
+    @Test
+    public void givenVehicleReference_afterunParking_logBookShouldBeUpdated() {
+        ParkingLot parkingLot = new ParkingLot("parking-1", 1, owner, attendant);
+        Vehicle vehicle = Mockito.mock(Vehicle.class);
+        vehicle.vehicleSize = SMALL;
+        parkingLot.park(vehicle, NORMAL);
+        Assert.assertEquals(parkingLot.logBook.size(), 1);
+        Assert.assertEquals(parkingLot.logBook.get(0).vehicle, vehicle);
+        parkingLot.unPark(vehicle);
+        Assert.assertEquals(parkingLot.logBook.size(), 1);
+        Assert.assertEquals(parkingLot.logBook.get(0).vehicle, vehicle);
+        Assert.assertNotNull(parkingLot.logBook.get(0).unParkedTime);
+    }
+
 }
