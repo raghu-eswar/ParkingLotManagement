@@ -19,6 +19,7 @@ public class ParkingLot {
     public Status status;
     public ParkingSpot [] parkingSpots;
     public Attendant parkingAttendant;
+    public List<JourneyDetails> logBook;
     public Owner owner;
 
     public ParkingLot(String name, int numberSpots, Owner owner, Attendant parkingAttendant) {
