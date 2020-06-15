@@ -104,7 +104,7 @@ public class TestParkingServices {
         Assert.assertTrue(services.park(vehicle3));
         Assert.assertTrue(services.park(vehicle4));
         Assert.assertTrue(services.park(vehicle5));
-        JourneyDetails[] journeyDetails = services.getVehiclesByColor(WHITE);
+        JourneyDetails[] journeyDetails = services.getVehiclesBy(WHITE);
         Assert.assertEquals(journeyDetails.length, 3);
         Assert.assertEquals(journeyDetails[0].vehicle.color, WHITE);
         Assert.assertEquals(journeyDetails[1].vehicle.color, WHITE);
@@ -130,6 +130,53 @@ public class TestParkingServices {
         Assert.assertTrue(services.park(vehicle4));
         Assert.assertTrue(services.park(vehicle5));
         Assert.assertTrue(services.park(vehicle6));
+    }
+
+    @Test
+    public void afterParkingGivenVehicles_getVehiclesByColor_shouldReturnArrayOfBmwVehicles() {
+        Vehicle vehicle1 = new Vehicle(SMALL, WHITE, "BMW");
+        Vehicle vehicle2 = new Vehicle(MEDIUM, BLUE, "audi");
+        Vehicle vehicle3 = new Vehicle(MEDIUM, BLUE, "BMW");
+        Vehicle vehicle4 = new Vehicle(SMALL, RED, "BMW");
+        Vehicle vehicle5 = new Vehicle(LARGE, BLUE, "Toyota");
+        Owner owner = new Owner();
+        Attendant attendant = new Attendant("123A", "Agarwal");
+        owner.addParkingLots(new ParkingLot("lot-1", 5, owner, attendant),
+                new ParkingLot("lot-1", 10, owner, attendant));
+        ParkingServices services = new ParkingServices(owner);
+        Assert.assertTrue(services.park(vehicle1));
+        Assert.assertTrue(services.park(vehicle2));
+        Assert.assertTrue(services.park(vehicle3));
+        Assert.assertTrue(services.park(vehicle4));
+        Assert.assertTrue(services.park(vehicle5));
+        JourneyDetails[] journeyDetails = services.getVehiclesBy( "BMW");
+        Assert.assertEquals(journeyDetails.length, 3);
+        Assert.assertEquals(journeyDetails[0].vehicle.brand, "BMW");
+        Assert.assertEquals(journeyDetails[1].vehicle.brand, "BMW");
+        Assert.assertEquals(journeyDetails[1].vehicle.brand, "BMW");
+    }
+
+    @Test
+    public void afterParkingGivenVehicles_getVehiclesByColor_shouldReturnArrayOfBlueToyotaVehicles() {
+        Vehicle vehicle1 = new Vehicle(SMALL, WHITE, "Toyota");
+        Vehicle vehicle2 = new Vehicle(MEDIUM, BLUE, "audi");
+        Vehicle vehicle3 = new Vehicle(MEDIUM, BLUE, "Toyota");
+        Vehicle vehicle4 = new Vehicle(SMALL, RED, "audi");
+        Vehicle vehicle5 = new Vehicle(LARGE, BLUE, "Toyota");
+        Owner owner = new Owner();
+        Attendant attendant = new Attendant("123A", "Agarwal");
+        owner.addParkingLots(new ParkingLot("lot-1", 5, owner, attendant),
+                new ParkingLot("lot-1", 10, owner, attendant));
+        ParkingServices services = new ParkingServices(owner);
+        Assert.assertTrue(services.park(vehicle1));
+        Assert.assertTrue(services.park(vehicle2));
+        Assert.assertTrue(services.park(vehicle3));
+        Assert.assertTrue(services.park(vehicle4));
+        Assert.assertTrue(services.park(vehicle5));
+        JourneyDetails[] journeyDetails = services.getVehiclesBy(BLUE, "Toyota");
+        Assert.assertEquals(journeyDetails.length, 2);
+        Assert.assertEquals(journeyDetails[0].vehicle.color, BLUE);
+        Assert.assertEquals(journeyDetails[1].vehicle.color, BLUE);
     }
 
 }

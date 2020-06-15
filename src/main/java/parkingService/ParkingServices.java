@@ -5,7 +5,7 @@ import parkingSystem.Owner;
 import parkingSystem.ParkingLot;
 import vehicles.Vehicle;
 
-import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,7 +61,7 @@ public class ParkingServices {
         return Arrays.stream(vehicle.parkingLot.getParkingSpot(vehicle)).map(parkingSpot -> parkingSpot.spotNumber).toArray(Integer[]::new);
     }
 
-    public JourneyDetails[] getVehiclesByColor(Color color) {
+    public JourneyDetails[] getVehiclesBy(Object... options) {
         List<ParkingLot> parkingLots = new ArrayList<>(this.owner.parkingLotsAvailable);
         parkingLots.addAll(this.owner.parkingLotsFilled);
         return parkingLots.stream()
@@ -69,8 +69,27 @@ public class ParkingServices {
                                 journeyDetails.addAll(journeyDetails2);
                                 return journeyDetails;
                             }).stream()
-                              .filter(journeyDetails -> journeyDetails.vehicle.color.equals(color))
+                              .filter(journeyDetails -> isPresent(options, journeyDetails))
                               .toArray(JourneyDetails[]::new);
+                }
+
+    private boolean isPresent(Object[] objects, JourneyDetails details) {
+        if (objects.length == 0)
+            return true;
+        Field[] journeyDetailsFields = details.getClass().getFields();
+        Field[] vehicleFields = details.vehicle.getClass().getFields();
+        long actualCount = 0;
+        try {
+            for (Field field : journeyDetailsFields)
+                if (Arrays.asList(objects).contains(field.get(details)))
+                    actualCount++;
+            for (Field field : vehicleFields)
+                if (Arrays.asList(objects).contains(field.get(details.vehicle)))
+                    actualCount++;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return actualCount == Arrays.stream(objects).map(Object::getClass).distinct().count();
     }
 
 }
