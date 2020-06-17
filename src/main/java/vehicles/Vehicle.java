@@ -1,17 +1,17 @@
 package vehicles;
 
-import parkingSystem.ParkingLot;
+import parkingSystem.ParkingSpot;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class Vehicle {
 
     public VehicleSize vehicleSize;
     public Color color;
-    public String brand;
-    public ParkingLot parkingLot;
+    public Brand brand;
+    public ParkingSpot parkingSpot;
 
-    public Vehicle(VehicleSize vehicleSize, Color color, String brand) {
+    public Vehicle(VehicleSize vehicleSize, Color color, Brand brand) {
         this.vehicleSize = vehicleSize;
         this.color = color;
         this.brand = brand;

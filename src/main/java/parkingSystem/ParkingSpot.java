@@ -2,41 +2,50 @@ package parkingSystem;
 
 import vehicles.Vehicle;
 
-import static parkingSystem.Status.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static parkingSystem.Status.AVAILABLE;
+import static parkingSystem.Status.FILLED;
 
 public class ParkingSpot {
+    public static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
     public int spotNumber;
     public Status status;
     public Vehicle vehicle;
-    public long startTime;
-    public long endTime;
-    public ParkingLot parkingLot;
+    public String startTime;
+    public String endTime;
+    public ParkingType parkingType;
+    public ParkingSlot parkingSlot;
 
-    public ParkingSpot(int spotNumber, ParkingLot parkingLot) {
+    public ParkingSpot(int spotNumber, ParkingSlot parkingSlot) {
         this.spotNumber = spotNumber;
         this.status = AVAILABLE;
-        this.parkingLot = parkingLot;
+        this.parkingSlot = parkingSlot;
     }
 
-    public ParkingSpot park(Vehicle vehicle) {
-        this.startTime = System.currentTimeMillis();
+    public ParkingSpot park(Vehicle vehicle, ParkingType parkingType) {
+        this.startTime = timeFormatter.format(LocalDateTime.now());
         this.vehicle = vehicle;
-        this.vehicle.parkingLot = parkingLot;
+        this.vehicle.parkingSpot = this;
+        this.parkingType = parkingType;
         this.updateStatus();
         return this;
     }
 
     public ParkingSpot unPark() {
-        this.vehicle.parkingLot = null;
+        this.vehicle.parkingSpot = null;
         this.vehicle = null;
-        this.endTime = System.currentTimeMillis();
+        this.endTime = timeFormatter.format(LocalDateTime.now());
+        this.parkingType = null;
         this.updateStatus();
         return this;
     }
 
-    void updateStatus() {
+    public void updateStatus() {
         this.status = (this.vehicle == null)? AVAILABLE : FILLED;
-        parkingLot.updateStatus();
+        parkingSlot.updateStatus();
     }
 
 }
