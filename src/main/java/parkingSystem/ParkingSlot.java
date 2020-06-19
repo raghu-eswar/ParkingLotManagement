@@ -41,8 +41,20 @@ public class ParkingSlot {
     }
 
     public boolean canPark(VehicleSize vehicleSize) {
-        return !this.status.equals(FILLED) &&
-                Arrays.stream(this.parkingSpots).filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE)).count() >= vehicleSize.size;
+        int counter = 0;
+        for (int i = 0; i < this.parkingSpots.length; i++) {
+            if (this.parkingSpots[i].status.equals(AVAILABLE)) {
+                counter = 1;
+                for (int j = 1; j < vehicleSize.size && i+j < this.parkingSpots.length; j++) {
+                    if (this.parkingSpots[i+j].status.equals(AVAILABLE))
+                        counter++;
+                }
+            }
+            if (counter == vehicleSize.size)
+                break;
+        }
+
+        return !this.status.equals(FILLED) && counter == vehicleSize.size;
     }
 
     private ParkingSpot[] getParkingSpot(ParkingType type, VehicleSize vehicleSize) {

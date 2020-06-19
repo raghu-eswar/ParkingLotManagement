@@ -151,9 +151,9 @@ public class TestParkingLot {
         Vehicle vehicle6 = new Vehicle(LARGE, WHITE, LAMBORGHINI);
         Vehicle vehicle7 = new Vehicle(SMALL, WHITE, LAMBORGHINI);
         Vehicle vehicle8 = new Vehicle(MEDIUM, WHITE, LAMBORGHINI);
-        Vehicle vehicle9 = new Vehicle(LARGE, WHITE, LAMBORGHINI);
-        Vehicle vehicle10 = new Vehicle(MEDIUM, WHITE, LAMBORGHINI);
-        Vehicle vehicle11 = new Vehicle(MEDIUM, WHITE, LAMBORGHINI);
+        Vehicle vehicle9 = new Vehicle(MEDIUM, WHITE, LAMBORGHINI);
+        Vehicle vehicle10 = new Vehicle(SMALL, WHITE, LAMBORGHINI);
+        Vehicle vehicle11 = new Vehicle(SMALL, WHITE, LAMBORGHINI);
         Vehicle vehicle12 = new Vehicle(SMALL, WHITE, LAMBORGHINI);
         Vehicle vehicle13 = new Vehicle(SMALL, WHITE, LAMBORGHINI);
         Vehicle vehicle14 = new Vehicle(SMALL, WHITE, LAMBORGHINI);
@@ -249,6 +249,23 @@ public class TestParkingLot {
     }
 
     @Test
+    public void afterParkingGivenVehicles_getVehiclesBy_shouldReturnArrayVehiclesOfHandicappedDriverParkedInSlotsAandC() {
+        Vehicle vehicle1 = new Vehicle(SMALL, WHITE, BMW);
+        Vehicle vehicle2 = new Vehicle(SMALL, BLUE, AUDI);
+        Vehicle vehicle3 = new Vehicle(SMALL, BLUE, BMW);
+        Vehicle vehicle4 = new Vehicle(SMALL, RED, BMW);
+        Vehicle vehicle5 = new Vehicle(SMALL, BLUE, TOYOTA);
+        ParkingLot parkingLot = new ParkingLot("lot-1", owner, attendant, 3);
+        Assert.assertTrue(parkingLot.park(vehicle1, HANDICAPPED));
+        Assert.assertTrue(parkingLot.park(vehicle2, HANDICAPPED));
+        Assert.assertTrue(parkingLot.park(vehicle3, HANDICAPPED));
+        Assert.assertTrue(parkingLot.park(vehicle4, NORMAL));
+        Assert.assertTrue(parkingLot.park(vehicle5, NORMAL));
+        VehicleDetailsDTO[] parkingSpots = parkingLot.getVehiclesBy('A', 'C', HANDICAPPED);
+        Assert.assertEquals(parkingSpots.length, 2);
+    }
+
+    @Test
     public void afterParkingGivenVehicles_getVehiclesBy_shouldReturnArrayOfBmwVehiclesParkedBefore30minByAgerwalInSlotsABAndC() {
         Vehicle vehicle1 = new Vehicle(SMALL, WHITE, BMW);
         Vehicle vehicle2 = new Vehicle(MEDIUM, BLUE, AUDI);
@@ -261,7 +278,7 @@ public class TestParkingLot {
         Assert.assertTrue(parkingLot.park(vehicle3, NORMAL));
         Assert.assertTrue(parkingLot.park(vehicle4, NORMAL));
         Assert.assertTrue(parkingLot.park(vehicle5, NORMAL));
-        VehicleDetailsDTO[] parkingSpots = parkingLot.getVehiclesBy( BMW, "Agarwal", timeFormatter.format(LocalDateTime.now()), 'A', 'C', 'D');
+        VehicleDetailsDTO[] parkingSpots = parkingLot.getVehiclesBy( BMW, "Agarwal", timeFormatter.format(LocalDateTime.now()), 'A', 'E', 'B');
         Assert.assertEquals(parkingSpots.length, 3);
         Assert.assertEquals(parkingSpots[0].vehicleBrand, BMW);
         Assert.assertEquals(parkingSpots[1].vehicleBrand, BMW);

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import static parkingSystem.Status.AVAILABLE;
 import static parkingSystem.Status.FILLED;
-import static vehicles.VehicleSize.MEDIUM;
+import static vehicles.VehicleSize.SMALL;
 
 public class ParkingLot {
 
@@ -43,7 +43,7 @@ public class ParkingLot {
         if (vehicle.parkingSpot != null)
             throw new RuntimeException("Vehicle parked already");
         if (this.status.equals(FILLED))
-            throw new RuntimeException("no space available to park");
+            throw new RuntimeException("no space available to park vehicle");
         ParkingSlot slot = getParkingSlot(type, vehicle.vehicleSize);
         return slot.park(vehicle, type);
     }
@@ -56,32 +56,142 @@ public class ParkingLot {
         return Arrays.stream(spots).allMatch(parkingSpot -> parkingSpot.vehicle == null);
     }
 
-    private ParkingSlot getParkingSlot(ParkingType type, VehicleSize vehicleSize) {
+    private ParkingSlot getParkingSlot(ParkingType type, VehicleSize vehicleSize, boolean isReArranged) {
         List<ParkingSlot> availableParkingSlots = new ArrayList<>();
         for (int index = 0; index < this.parkingSlots.length; index++) {
             boolean status = this.parkingSlots[index].canPark(vehicleSize);
-            if (vehicleSize.size > MEDIUM.size && index != 0 && index != this.parkingSlots.length - 1) {
+            int counter = vehicleSize.size;
+            if (vehicleSize.size > SMALL.size && index != 0 && index != this.parkingSlots.length - 1) {
+                counter = 0;
                 for (int i = index, j = 0; j < vehicleSize.size; i++, j++) {
                     if (Arrays.stream(this.parkingSlots[index].parkingSpots).filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE)).count()
-                            > Arrays.stream(this.parkingSlots[i - 1].parkingSpots).filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE)).count()) {
-                        status = false;
-                        break;
+                            <= Arrays.stream(this.parkingSlots[i - 1].parkingSpots).filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE)).count()) {
+                       counter++;
                     }
                 }
             }
-            if (status)
+            if (status && counter >= vehicleSize.size)
                 availableParkingSlots.add(this.parkingSlots[index]);
         }
-        if (availableParkingSlots.size() == 0)
-            throw new RuntimeException("space not available for "+vehicleSize+" vehicles");
+        if (availableParkingSlots.size() == 0 ) {
+            if (isReArranged) {
+                throw new RuntimeException("space not available for " + vehicleSize + " vehicles");
+            }
+            getParkingSlot(type, vehicleSize, reArrangeVehicles(type, vehicleSize));
+        }
         List<Long> countOfVehicleParked = availableParkingSlots.stream()
-                                                        .map(parkingSlot -> Arrays.stream(parkingSlot.parkingSpots)
-                                                                                    .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
-                                                                                    .count())
-                                                        .collect(Collectors.toList());
+                                                                .map(parkingSlot -> Arrays.stream(parkingSlot.parkingSpots)
+                                                                        .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
+                                                                        .count())
+                                                                .collect(Collectors.toList());
         Optional<Long> maximumFreeSpots = countOfVehicleParked.stream().reduce(Math::max);
         Integer index = maximumFreeSpots.map(countOfVehicleParked::indexOf).orElse(0);
         return availableParkingSlots.get(index);
+    }
+    private ParkingSlot getParkingSlot(ParkingType type, VehicleSize vehicleSize) {
+        return getParkingSlot(type, vehicleSize, false);
+    }
+
+    private boolean reArrangeVehicles(ParkingType type, VehicleSize vehicleSize) {
+        List<ParkingSpot> parkingSpotsWithSmallVehicles = new ArrayList<>();
+        List<ParkingSpot> emptyParkingSpots = new ArrayList<>();
+        List<ParkingSpot> firstColumnSpots = Arrays.stream(this.parkingSlots[0].parkingSpots)
+                                                    .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE) ||
+                                                            parkingSpot.vehicle.vehicleSize.equals(SMALL))
+                                                    .collect(Collectors.toList());
+        List<ParkingSpot> lastColumnSpots = Arrays.stream(this.parkingSlots[this.parkingSlots.length-1].parkingSpots)
+                                                    .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE) ||
+                                                            parkingSpot.vehicle.vehicleSize.equals(SMALL))
+                                                    .collect(Collectors.toList());
+
+        if (firstColumnSpots.size() >= vehicleSize.size) {
+            parkingSpotsWithSmallVehicles = firstColumnSpots.stream()
+                                                            .filter(parkingSpot ->  parkingSpot.vehicle != null &&
+                                                                    parkingSpot.vehicle.vehicleSize.equals(SMALL))
+                                                            .collect(Collectors.toList());
+            emptyParkingSpots = firstColumnSpots.stream()
+                                                .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
+                                                .collect(Collectors.toList());
+        }
+        else if (lastColumnSpots.size() >= vehicleSize.size) {
+            parkingSpotsWithSmallVehicles = lastColumnSpots.stream()
+                                                            .filter(parkingSpot ->  parkingSpot.vehicle != null &&
+                                                                    parkingSpot.vehicle.vehicleSize.equals(SMALL))
+                                                            .collect(Collectors.toList());
+            emptyParkingSpots = lastColumnSpots.stream()
+                                                .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
+                                                .collect(Collectors.toList());
+        }
+        else {
+            int minimumVehiclesInSlot = Arrays.stream(this.parkingSlots)
+                                                .map(parkingSlot -> Arrays.stream(parkingSlot.parkingSpots)
+                                                                            .filter(parkingSpot -> parkingSpot.status.equals(FILLED))
+                                                                            .count())
+                                                .reduce(Math::min)
+                                                .orElse(0L)
+                                                .intValue();
+            if (minimumVehiclesInSlot + vehicleSize.size <= this.parkingSlots[0].parkingSpots.length) {
+                List<ParkingSpot> parkingSpotsInLastRows = Arrays.stream(this.parkingSlots)
+                                                                    .map(parkingSlot -> Arrays.stream(parkingSlot.parkingSpots)
+                                                                                                .filter(parkingSpot -> parkingSpot.spotNumber > minimumVehiclesInSlot
+                                                                                                        && (parkingSpot.status.equals(AVAILABLE) ||
+                                                                                                            SMALL.equals(parkingSpot.vehicle.vehicleSize)))
+                                                                    .collect(Collectors.toList()))
+                                                                    .reduce((parkingSpots1, parkingSpots2) -> {
+                                                                        parkingSpots1.addAll(parkingSpots2);
+                                                                        return parkingSpots1;
+                                                                    }).orElse(parkingSpotsWithSmallVehicles);
+                if (parkingSpotsInLastRows.size() >= Math.pow(vehicleSize.size, 2)) {
+                    parkingSpotsWithSmallVehicles = parkingSpotsInLastRows.stream()
+                                                                            .filter(parkingSpot -> parkingSpot.vehicle != null &&
+                                                                                    parkingSpot.vehicle.vehicleSize.equals(SMALL))
+                                                                            .collect(Collectors.toList());
+                    emptyParkingSpots = parkingSpotsInLastRows.stream()
+                                                                .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
+                                                                .collect(Collectors.toList());
+                } else {
+                    throw new RuntimeException("space not available for " + vehicleSize + " vehicles");
+                }
+            }
+        }
+        List<ParkingSpot> emptyParkingSpotsInLot = Arrays.stream(this.parkingSlots)
+                                                            .filter(parkingSlot -> !parkingSlot.equals(this.parkingSlots[0]) &&
+                                                                    !parkingSlot.equals(this.parkingSlots[this.parkingSlots.length - 1]))
+                                                            .map(parkingSlot -> Arrays.stream(parkingSlot.parkingSpots)
+                                                                                        .filter(parkingSpot -> parkingSpot.status.equals(AVAILABLE))
+                                                                                        .collect(Collectors.toList()))
+                                                            .reduce((parkingSpots1, parkingSpots2) -> {
+                                                                parkingSpots1.addAll(parkingSpots2);
+                                                                return parkingSpots1;
+                                                            }).orElse(new ArrayList<>());
+        emptyParkingSpotsInLot.removeAll(emptyParkingSpots);
+        int index = Math.min(parkingSpotsWithSmallVehicles.size(), emptyParkingSpotsInLot.size());
+        for (int i = 0; i < index; i++) {
+            ParkingSpot spot = parkingSpotsWithSmallVehicles.get(i);
+            ParkingSpot spot1 = emptyParkingSpotsInLot.get(i);
+            spot1.park(spot.vehicle, spot.parkingType);
+            spot1.startTime = spot.startTime;
+            spot.unPark();
+        }
+
+        for (ParkingSlot parkingSlot : this.parkingSlots) {
+            for (int j = 0; j < parkingSlot.parkingSpots.length; j++) {
+                ParkingSpot emptySpot = parkingSlot.parkingSpots[j];
+                if (emptySpot.vehicle == null) {
+                    for (int k = j + 1; k < parkingSlot.parkingSpots.length; k++) {
+                        ParkingSpot parkingSpot = parkingSlot.parkingSpots[k];
+                        if (parkingSpot.vehicle == null)
+                            emptySpot = parkingSpot;
+                        else {
+                            parkingSlot.parkingSpots[j] = parkingSpot;
+                            parkingSlot.parkingSpots[k] = emptySpot;
+                        }
+
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public ParkingSpot[] getParkingSpots(Vehicle vehicle) {
@@ -98,7 +208,7 @@ public class ParkingLot {
     void updateStatus() {
         if (this.status != (this.status = Arrays.stream(this.parkingSlots)
                                                 .anyMatch(parkingSlot -> parkingSlot.status.equals(AVAILABLE))? AVAILABLE : FILLED ))
-            this.owner.updateStatus();
+            this.owner.updateStatus(this.status);
     }
 
     public VehicleDetailsDTO[] getVehiclesBy(Object... options) {

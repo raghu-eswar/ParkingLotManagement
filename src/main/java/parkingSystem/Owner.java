@@ -1,7 +1,9 @@
 package parkingSystem;
 
-public class Owner {
+import static parkingSystem.Status.AVAILABLE;
 
-    public void updateStatus() {    }
+public class Owner {
+    Status lotStatus = AVAILABLE;
+    public boolean updateStatus(Status status) {  return !lotStatus.equals(status);  }
 
 }
