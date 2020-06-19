@@ -49,11 +49,10 @@ public class ParkingLot {
     }
 
     public boolean unPark(Vehicle vehicle) {
-        ParkingSpot[] spots = this.getParkingSpots(vehicle);
-        if (spots == null || spots.length == 0)
+        if (vehicle.parkingSpots == null || vehicle.parkingSpots.length == 0)
             throw new RuntimeException("No car found");
-        Arrays.stream(spots).forEach(ParkingSpot::unPark);
-        return Arrays.stream(spots).allMatch(parkingSpot -> parkingSpot.vehicle == null);
+        Arrays.stream(vehicle.parkingSpots).forEach(ParkingSpot::unPark);
+        return Arrays.stream(vehicle.parkingSpots).allMatch(parkingSpot -> parkingSpot.vehicle == null);
     }
 
     private ParkingSlot getParkingSlot(ParkingType type, VehicleSize vehicleSize, boolean isReArranged) {
@@ -184,14 +183,7 @@ public class ParkingLot {
     }
 
     public ParkingSpot[] getParkingSpots(Vehicle vehicle) {
-        return Arrays.stream(this.parkingSlots)
-                    .map(parkingSlot -> Arrays.asList(parkingSlot.parkingSpots))
-                    .reduce(new LinkedList<>(), (parkingSpots, parkingSpots2) -> {
-                        parkingSpots.addAll(parkingSpots2);
-                        return parkingSpots;
-                    }).stream()
-                      .filter(parkingSpot -> vehicle.equals(parkingSpot.vehicle))
-                      .toArray(ParkingSpot[]::new);
+        return vehicle.parkingSpots;
     }
 
     void updateStatus() {
