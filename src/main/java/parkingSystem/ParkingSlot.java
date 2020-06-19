@@ -17,6 +17,7 @@ public class ParkingSlot {
     public ParkingLot parkingLot;
     public ParkingSpot[] parkingSpots;
     public Status status;
+    public int emptySpots;
 
     public ParkingSlot(char name, int numberOfSpotsPerSlot, ParkingLot parkingLot, Attendant parkingAttendant) {
         this.name = name;
@@ -24,6 +25,7 @@ public class ParkingSlot {
         this.parkingAttendant = parkingAttendant;
         this.parkingSpots = createParkingSpots(numberOfSpotsPerSlot);
         this.status = AVAILABLE;
+        this.emptySpots = this.parkingSpots.length;
     }
 
     private ParkingSpot[] createParkingSpots(int numberOfSpotsPerSlot) {
@@ -37,11 +39,14 @@ public class ParkingSlot {
     public boolean park(Vehicle vehicle, ParkingType type) {
         ParkingSpot[] spots = getParkingSpot(type, vehicle.vehicleSize);
         Arrays.stream(spots).forEach(parkingSpot -> parkingSpot.park(vehicle, type));
+        this.emptySpots -= spots.length;
         return Arrays.stream(spots).allMatch(parkingSpot -> vehicle.equals(parkingSpot.vehicle));
     }
 
     public boolean canPark(VehicleSize vehicleSize) {
         int counter = 0;
+        if (this.status.equals(FILLED) && this.emptySpots < vehicleSize.size)
+            return false;
         for (int i = 0; i < this.parkingSpots.length; i++) {
             if (this.parkingSpots[i].status.equals(AVAILABLE)) {
                 counter = 1;
@@ -53,8 +58,7 @@ public class ParkingSlot {
             if (counter == vehicleSize.size)
                 break;
         }
-
-        return !this.status.equals(FILLED) && counter == vehicleSize.size;
+        return counter == vehicleSize.size;
     }
 
     private ParkingSpot[] getParkingSpot(ParkingType type, VehicleSize vehicleSize) {
