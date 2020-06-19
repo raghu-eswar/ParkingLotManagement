@@ -9,7 +9,7 @@ public class Vehicle {
     public VehicleSize vehicleSize;
     public Color color;
     public Brand brand;
-    public ParkingSpot parkingSpot;
+    public ParkingSpot[] parkingSpots;
 
     public Vehicle(VehicleSize vehicleSize, Color color, Brand brand) {
         this.vehicleSize = vehicleSize;

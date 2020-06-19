@@ -39,6 +39,7 @@ public class ParkingSlot {
     public boolean park(Vehicle vehicle, ParkingType type) {
         ParkingSpot[] spots = getParkingSpot(type, vehicle.vehicleSize);
         Arrays.stream(spots).forEach(parkingSpot -> parkingSpot.park(vehicle, type));
+        vehicle.parkingSpots = spots;
         this.emptySpots -= spots.length;
         return Arrays.stream(spots).allMatch(parkingSpot -> vehicle.equals(parkingSpot.vehicle));
     }

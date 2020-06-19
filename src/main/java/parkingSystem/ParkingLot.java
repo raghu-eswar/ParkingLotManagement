@@ -40,7 +40,7 @@ public class ParkingLot {
     }
 
     public boolean park(Vehicle vehicle, ParkingType type) {
-        if (vehicle.parkingSpot != null)
+        if (vehicle.parkingSpots != null)
             throw new RuntimeException("Vehicle parked already");
         if (this.status.equals(FILLED))
             throw new RuntimeException("no space available to park vehicle");
@@ -209,9 +209,8 @@ public class ParkingLot {
                             parkingSpots.addAll(parkingSpots2);
                             return parkingSpots;
                         }).stream()
-                            .map(parkingSpot -> parkingSpot.vehicle)
+                            .map(parkingSpot -> parkingSpot.vehicle.parkingSpots[0])
                             .distinct()
-                            .map(vehicle -> vehicle.parkingSpot)
                             .map(VehicleDetailsDTO::new)
                             .filter(vehicleDetailsDTO -> isOption(options, vehicleDetailsDTO))
                             .toArray(VehicleDetailsDTO[]::new);

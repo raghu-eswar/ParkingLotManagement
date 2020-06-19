@@ -75,7 +75,7 @@ public class TestParkingLot {
         parkingSlot.status = FILLED;
         parkingSpot.status = FILLED;
         parkingSpot.vehicle = vehicle;
-        vehicle.parkingSpot = parkingSpot;
+        vehicle.parkingSpots = new ParkingSpot[]{parkingSpot};
         Mockito.when(parkingSpot.unPark()).then(invocation -> {
             parkingSlot.status = AVAILABLE;
             parkingSpot.vehicle = null;
@@ -90,7 +90,7 @@ public class TestParkingLot {
     public void givenVehicleReferenceAfterParking_getParkingSpot_ShouldReturnCorrectSpot() {
         Vehicle vehicle = Mockito.mock(Vehicle.class);
         parkingSpot.vehicle = vehicle;
-        vehicle.parkingSpot = parkingSpot;
+        vehicle.parkingSpots = new ParkingSpot[]{parkingSpot};
         Assert.assertEquals(parkingSpot, parkingLot.getParkingSpots(vehicle)[0]);
     }
 
@@ -134,7 +134,7 @@ public class TestParkingLot {
         vehicle.vehicleSize = SMALL;
         for (int i = 0; i < 5; i++) {
             Assert.assertTrue(parkingLot.park(vehicle, NORMAL));
-            vehicle.parkingSpot = null;
+            vehicle.parkingSpots = null;
         }
         for (int i = 0; i < 5; i++) {
             Assert.assertEquals(parkingLot.parkingSlots[i].parkingSpots[0].vehicle, vehicle);
