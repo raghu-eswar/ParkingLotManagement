@@ -39,6 +39,7 @@ public class ParkingSpot {
         this.vehicle = null;
         this.endTime = timeFormatter.format(LocalDateTime.now());
         this.parkingType = null;
+        this.parkingSlot.emptySpots+=1;
         this.updateStatus();
         return this;
     }
